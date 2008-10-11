@@ -7,7 +7,8 @@ import junit.framework.TestCase;
 public abstract class AbstractMatcherTest extends TestCase {
 
     /**
-     * Create an instance of the Matcher so some generic safety-net tests can be run on it.
+     * Create an instance of the Matcher so some generic safety-net tests can be
+     * run on it.
      */
     protected abstract Matcher<?> createMatcher();
 
@@ -29,8 +30,8 @@ public abstract class AbstractMatcherTest extends TestCase {
     }
 
     public void testIsNullSafe() {
-       // should not throw a NullPointerException
-       createMatcher().matches(null);
+        // should not throw a NullPointerException
+        createMatcher().matches(null);
     }
 
     public void testCopesWithUnknownTypes() {

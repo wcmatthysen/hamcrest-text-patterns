@@ -4,10 +4,10 @@ import org.hamcrest.text.pattern.PatternComponent;
 
 public class Optional extends PatternModifier implements PatternComponent {
     public Optional(PatternComponent pattern) {
-	super(pattern);
+        super(pattern);
     }
 
     protected void appendModifier(StringBuilder builder) {
-	builder.append("?");
+        builder.append("?");
     }
 }
