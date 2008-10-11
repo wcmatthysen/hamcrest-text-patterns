@@ -18,6 +18,7 @@ import static org.hamcrest.text.pattern.Patterns.optional;
 import static org.hamcrest.text.pattern.Patterns.sequence;
 import static org.hamcrest.text.pattern.Patterns.text;
 import static org.hamcrest.text.pattern.Patterns.valueOf;
+import static org.hamcrest.text.pattern.Patterns.whitespace;
 import static org.hamcrest.text.pattern.Patterns.zeroOrMore;
 import junit.framework.TestCase;
 
@@ -299,6 +300,15 @@ public class PatternMatcherTests extends TestCase {
 		assertThat("x:x:x:x:x", matchesPattern(matcher));
 		
 		assertThat("x,x,x", not(matchesPattern(matcher)));
+	}
+	
+	public void testMatchesWhitespace() {
+	    PatternMatcher matcher = new PatternMatcher(
+	        sequence("a", whitespace(), "z"));
+	    
+        assertThat("az", matchesPattern(matcher));
+        assertThat("a z", matchesPattern(matcher));
+        assertThat("a \t z", matchesPattern(matcher));
 	}
 }
 
