@@ -61,7 +61,7 @@ public abstract class Patterns {
 	return new OneOrMore(toPattern(o));
     }
 
-    public static PatternComponent group(String name, PatternComponent pattern) {
+    public static PatternComponent capture(String name, PatternComponent pattern) {
 	return new CaptureGroup(name, pattern);
     }
 

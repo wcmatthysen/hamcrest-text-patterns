@@ -11,7 +11,7 @@ import static org.hamcrest.text.pattern.Patterns.anyCharacterNotInCategory;
 import static org.hamcrest.text.pattern.Patterns.either;
 import static org.hamcrest.text.pattern.Patterns.exactly;
 import static org.hamcrest.text.pattern.Patterns.from;
-import static org.hamcrest.text.pattern.Patterns.group;
+import static org.hamcrest.text.pattern.Patterns.capture;
 import static org.hamcrest.text.pattern.Patterns.listOf;
 import static org.hamcrest.text.pattern.Patterns.oneOrMore;
 import static org.hamcrest.text.pattern.Patterns.optional;
@@ -106,8 +106,8 @@ public class PatternMatcherTests extends TestCase {
 	public void testCapturesMatchedGroups() throws Exception {
 		PatternMatcher matcher = new PatternMatcher(
 			sequence(
-				group("xs", oneOrMore(text("x"))),
-				group("ys", oneOrMore(text("y")))));
+				capture("xs", oneOrMore(text("x"))),
+				capture("ys", oneOrMore(text("y")))));
 		
 		Parse parse;
 		
@@ -136,7 +136,7 @@ public class PatternMatcherTests extends TestCase {
 	public void testCanReferToContentOfMatchedGroups() throws Exception {
 		PatternMatcher matcher = new PatternMatcher(
 			sequence(
-				group("first", oneOrMore(text("x"))),
+				capture("first", oneOrMore(text("x"))),
 				text("-"),
 				valueOf("first")));
 		
@@ -149,10 +149,10 @@ public class PatternMatcherTests extends TestCase {
 	
 	PatternMatcher scopedMatcher = new PatternMatcher(
 		sequence(
-			group("xs", oneOrMore(text("x"))),
-			group("inside",
+			capture("xs", oneOrMore(text("x"))),
+			capture("inside",
 				sequence(
-					group("xs", oneOrMore(text("X"))),
+					capture("xs", oneOrMore(text("X"))),
 				    valueOf("xs"))),
 			valueOf("xs")));
 
@@ -172,10 +172,10 @@ public class PatternMatcherTests extends TestCase {
 	public void testCanReferToValuesOfGroupsInInnerScopesUsingDottedPathNotation() {
 		PatternMatcher matcher = new PatternMatcher(
 			sequence(
-				group("xs", oneOrMore(text("x"))),
-				group("inside",
+				capture("xs", oneOrMore(text("x"))),
+				capture("inside",
 					sequence(
-						group("xs", oneOrMore(text("X"))),
+						capture("xs", oneOrMore(text("X"))),
 					    valueOf("xs"))),
 				valueOf("xs"),
 				valueOf("inside.xs")));
@@ -187,15 +187,15 @@ public class PatternMatcherTests extends TestCase {
 	public void testCanDefinePatternsInTermsOfExistingPatterns() {
 		PatternMatcher emailAddressMatcher = new PatternMatcher(
 			sequence(
-				group("user", oneOrMore(anyCharacter())),
+				capture("user", oneOrMore(anyCharacter())),
 				"@",
-				group("host", oneOrMore(anyCharacter()))));
+				capture("host", oneOrMore(anyCharacter()))));
 		
 		PatternMatcher mailToURLMatcher = new PatternMatcher(
 			sequence(
-				group("scheme", text("mailto")),
+				capture("scheme", text("mailto")),
 				":",
-				group("email", emailAddressMatcher)));
+				capture("email", emailAddressMatcher)));
 		
 		assertThat("mailto:npryce@users.sf.net", matchesPattern(mailToURLMatcher));
 	}
