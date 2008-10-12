@@ -1,6 +1,5 @@
 package org.hamcrest.text.pattern;
 
-import static org.junit.Assert.assertThat;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.text.pattern.PatternMatcher.matchesPattern;
 import static org.hamcrest.text.pattern.Patterns.anyCharacter;
@@ -8,10 +7,12 @@ import static org.hamcrest.text.pattern.Patterns.anyCharacterIn;
 import static org.hamcrest.text.pattern.Patterns.anyCharacterInCategory;
 import static org.hamcrest.text.pattern.Patterns.anyCharacterNotIn;
 import static org.hamcrest.text.pattern.Patterns.anyCharacterNotInCategory;
+import static org.hamcrest.text.pattern.Patterns.capture;
+import static org.hamcrest.text.pattern.Patterns.caseInsensitive;
+import static org.hamcrest.text.pattern.Patterns.caseSensitive;
 import static org.hamcrest.text.pattern.Patterns.either;
 import static org.hamcrest.text.pattern.Patterns.exactly;
 import static org.hamcrest.text.pattern.Patterns.from;
-import static org.hamcrest.text.pattern.Patterns.capture;
 import static org.hamcrest.text.pattern.Patterns.listOf;
 import static org.hamcrest.text.pattern.Patterns.oneOrMore;
 import static org.hamcrest.text.pattern.Patterns.optional;
@@ -20,10 +21,15 @@ import static org.hamcrest.text.pattern.Patterns.text;
 import static org.hamcrest.text.pattern.Patterns.valueOf;
 import static org.hamcrest.text.pattern.Patterns.whitespace;
 import static org.hamcrest.text.pattern.Patterns.zeroOrMore;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
-public class PatternMatcherTests extends TestCase {
-    public void testMatchesPlainText() {
+import org.junit.Test;
+
+public class PatternMatcherTests {
+    @Test
+    public void matchesPlainText() {
         PatternMatcher matcher = new PatternMatcher(text("text"));
 
         assertThat("text", matchesPattern(matcher));
@@ -32,19 +38,22 @@ public class PatternMatcherTests extends TestCase {
         assertThat("blah", not(matchesPattern(matcher)));
     }
 
-    public void testMatchesPlainTextContainingSpecialRegexCharacters() {
+    @Test
+    public void matchesPlainTextContainingSpecialRegexCharacters() {
         PatternMatcher matcher = new PatternMatcher(text("*star*"));
 
         assertThat("*star*", matchesPattern(matcher));
     }
 
-    public void testMatchesSequenceOfText() {
+    @Test
+    public void matchesSequenceOfText() {
         PatternMatcher matcher = new PatternMatcher(sequence("hello", " ", "world"));
 
         assertThat("hello world", matchesPattern(matcher));
     }
 
-    public void testMatchesAlternatives() {
+    @Test
+    public void matchesAlternatives() {
         PatternMatcher matcher = new PatternMatcher(either(text("hello"), text("world")));
 
         assertThat("hello", matchesPattern(matcher));
@@ -52,7 +61,8 @@ public class PatternMatcherTests extends TestCase {
         assertThat("hello world", not(matchesPattern(matcher)));
     }
 
-    public void testMatchesOptionalPattern() {
+    @Test
+    public void matchesOptionalPattern() {
         PatternMatcher matcher = new PatternMatcher(sequence(text("hello"), optional(text(" world"))));
 
         assertThat("hello", matchesPattern(matcher));
@@ -60,7 +70,8 @@ public class PatternMatcherTests extends TestCase {
         assertThat(" world", not(matchesPattern(matcher)));
     }
 
-    public void testMatchesRepetitionZeroOrMoreTimes() {
+    @Test
+    public void matchesRepetitionZeroOrMoreTimes() {
         PatternMatcher matcher = new PatternMatcher(zeroOrMore(text("x")));
 
         assertThat("", matchesPattern(matcher));
@@ -71,7 +82,8 @@ public class PatternMatcherTests extends TestCase {
         assertThat("xx ", not(matchesPattern(matcher)));
     }
 
-    public void testMatchesRepetitionOneOrMoreTimes() {
+    @Test
+    public void matchesRepetitionOneOrMoreTimes() {
         PatternMatcher matcher = new PatternMatcher(oneOrMore(text("x")));
 
         assertThat("", not(matchesPattern(matcher)));
@@ -82,6 +94,7 @@ public class PatternMatcherTests extends TestCase {
         assertThat("xx ", not(matchesPattern(matcher)));
     }
 
+    @Test
     public void testCanMatchAnyCharacter() {
         PatternMatcher matcher = new PatternMatcher(sequence(text("x"), anyCharacter(), text("y")));
 
@@ -90,6 +103,7 @@ public class PatternMatcherTests extends TestCase {
         assertThat("xy", not(matchesPattern(matcher)));
     }
 
+    @Test
     public void testCapturesMatchedGroups() throws Exception {
         PatternMatcher matcher = new PatternMatcher(sequence(capture("xs", oneOrMore(text("x"))), capture("ys", oneOrMore(text("y")))));
 
@@ -104,6 +118,7 @@ public class PatternMatcherTests extends TestCase {
         assertEquals("yyyyyy", parse.get("ys"));
     }
 
+    @Test
     public void testFailsIfDoesNotMatchParseInput() {
         PatternMatcher matcher = new PatternMatcher(text("expected input"));
 
@@ -115,6 +130,7 @@ public class PatternMatcherTests extends TestCase {
         }
     }
 
+    @Test
     public void testCanReferToContentOfMatchedGroups() throws Exception {
         PatternMatcher matcher = new PatternMatcher(sequence(capture("first", oneOrMore(text("x"))), text("-"), valueOf("first")));
 
@@ -127,6 +143,7 @@ public class PatternMatcherTests extends TestCase {
 
     PatternMatcher scopedMatcher = new PatternMatcher(sequence(capture("xs", oneOrMore(text("x"))), capture("inside", sequence(capture("xs", oneOrMore(text("X"))), valueOf("xs"))), valueOf("xs")));
 
+    @Test
     public void testReferencesToGroupsAreLexicallyScoped() throws Exception {
         assertThat("xxXXXXxx", matchesPattern(scopedMatcher));
         assertThat("xXXx", matchesPattern(scopedMatcher));
@@ -134,12 +151,14 @@ public class PatternMatcherTests extends TestCase {
         assertThat("xXXX", not(matchesPattern(scopedMatcher)));
     }
 
+    @Test
     public void testNamesInInnerScopesCanBeQueriedUsingDottedPathNotation() throws Exception {
         Parse parse = scopedMatcher.parse("xxXXXXXXxx");
         assertEquals("xx", parse.get("xs"));
         assertEquals("XXX", parse.get("inside.xs"));
     }
 
+    @Test
     public void testCanReferToValuesOfGroupsInInnerScopesUsingDottedPathNotation() {
         PatternMatcher matcher = new PatternMatcher(sequence(capture("xs", oneOrMore(text("x"))), capture("inside", sequence(capture("xs", oneOrMore(text("X"))), valueOf("xs"))), valueOf("xs"), valueOf("inside.xs")));
 
@@ -147,6 +166,7 @@ public class PatternMatcherTests extends TestCase {
         assertThat("xxXXxxX", matchesPattern(matcher));
     }
 
+    @Test
     public void testCanDefinePatternsInTermsOfExistingPatterns() {
         PatternMatcher emailAddressMatcher = new PatternMatcher(sequence(capture("user", oneOrMore(anyCharacter())), "@", capture("host", oneOrMore(anyCharacter()))));
 
@@ -155,7 +175,8 @@ public class PatternMatcherTests extends TestCase {
         assertThat("mailto:npryce@users.sf.net", matchesPattern(mailToURLMatcher));
     }
 
-    public void testMatchesCharacterInList() {
+    @Test
+    public void matchesCharacterInList() {
         PatternMatcher matcher = new PatternMatcher(anyCharacterIn("0123456789"));
 
         for (int i = 0; i < 9; i++) {
@@ -166,7 +187,8 @@ public class PatternMatcherTests extends TestCase {
         assertThat("X", not(matchesPattern(matcher)));
     }
 
-    public void testMatchesCharacterRange() {
+    @Test
+    public void matchesCharacterRange() {
         PatternMatcher matcher = new PatternMatcher(anyCharacterIn("0-9"));
 
         for (int i = 0; i < 9; i++) {
@@ -177,7 +199,8 @@ public class PatternMatcherTests extends TestCase {
         assertThat("X", not(matchesPattern(matcher)));
     }
 
-    public void testMatchesCharacterNotInRange() {
+    @Test
+    public void matchesCharacterNotInRange() {
         PatternMatcher matcher = new PatternMatcher(anyCharacterNotIn("0-9"));
 
         for (int i = 0; i < 9; i++) {
@@ -188,7 +211,8 @@ public class PatternMatcherTests extends TestCase {
         assertThat("X", matchesPattern(matcher));
     }
 
-    public void testMatchesCharactersInUnicodeCategories() {
+    @Test
+    public void matchesCharactersInUnicodeCategories() {
         PatternMatcher matcher = new PatternMatcher(anyCharacterInCategory("Lu"));
 
         assertThat("A", matchesPattern(matcher));
@@ -197,7 +221,8 @@ public class PatternMatcherTests extends TestCase {
         assertThat("b", not(matchesPattern(matcher)));
     }
 
-    public void testMatchesCharactersNotInUnicodeCategories() {
+    @Test
+    public void matchesCharactersNotInUnicodeCategories() {
         PatternMatcher matcher = new PatternMatcher(anyCharacterNotInCategory("Lu"));
 
         assertThat("A", not(matchesPattern(matcher)));
@@ -206,7 +231,8 @@ public class PatternMatcherTests extends TestCase {
         assertThat("b", matchesPattern(matcher));
     }
 
-    public void testMatchesExactlyTheSpecifiedNumberOfRepetitions() {
+    @Test
+    public void matchesExactlyTheSpecifiedNumberOfRepetitions() {
         PatternMatcher matcher = new PatternMatcher(exactly(3, "x"));
 
         assertThat("xx", not(matchesPattern(matcher)));
@@ -214,7 +240,8 @@ public class PatternMatcherTests extends TestCase {
         assertThat("xxxx", not(matchesPattern(matcher)));
     }
 
-    public void testMatchesARangeOfAllowableRepetitions() {
+    @Test
+    public void matchesARangeOfAllowableRepetitions() {
         PatternMatcher matcher = new PatternMatcher(from(3, 5, "x"));
 
         assertThat("xx", not(matchesPattern(matcher)));
@@ -224,7 +251,8 @@ public class PatternMatcherTests extends TestCase {
         assertThat("xxxxxx", not(matchesPattern(matcher)));
     }
 
-    public void testMatchesAListOfMatchedThings() {
+    @Test
+    public void matchesAListOfMatchedThings() {
         PatternMatcher matcher = new PatternMatcher(listOf("x"));
 
         assertThat("", matchesPattern(matcher));
@@ -236,7 +264,8 @@ public class PatternMatcherTests extends TestCase {
         assertThat("x,x,x,", not(matchesPattern(matcher)));
     }
 
-    public void testMatchesAListWithSpecificSeparator() {
+    @Test
+    public void matchesAListWithSpecificSeparator() {
         PatternMatcher matcher = new PatternMatcher(listOf("x").separatedBy(":"));
 
         assertThat("", matchesPattern(matcher));
@@ -247,11 +276,23 @@ public class PatternMatcherTests extends TestCase {
         assertThat("x,x,x", not(matchesPattern(matcher)));
     }
 
-    public void testMatchesWhitespace() {
+    @Test
+    public void matchesWhitespace() {
         PatternMatcher matcher = new PatternMatcher(sequence("a", whitespace(), "z"));
 
         assertThat("az", matchesPattern(matcher));
         assertThat("a z", matchesPattern(matcher));
         assertThat("a \t z", matchesPattern(matcher));
+    }
+    
+    @Test
+    public void canControlCaseSensitivity() {
+        PatternMatcher matcher = new PatternMatcher(
+            sequence("a",caseInsensitive(sequence("b",caseSensitive("c"))))
+        );
+        
+        assertThat("abc", matchesPattern(matcher));
+        assertThat("aBc", matchesPattern(matcher));
+        assertThat("aBC", not(matchesPattern(matcher)));
     }
 }

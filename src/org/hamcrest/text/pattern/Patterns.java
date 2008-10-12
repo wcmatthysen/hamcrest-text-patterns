@@ -8,6 +8,7 @@ import org.hamcrest.text.pattern.internal.ast.CharacterNotInRange;
 import org.hamcrest.text.pattern.internal.ast.CharacterNotInUnicodeCategory;
 import org.hamcrest.text.pattern.internal.ast.Choice;
 import org.hamcrest.text.pattern.internal.ast.Exactly;
+import org.hamcrest.text.pattern.internal.ast.Flags;
 import org.hamcrest.text.pattern.internal.ast.GroupReference;
 import org.hamcrest.text.pattern.internal.ast.ListOf;
 import org.hamcrest.text.pattern.internal.ast.Literal;
@@ -88,15 +89,23 @@ public abstract class Patterns {
         return patterns;
     }
 
+    public static PatternComponent whitespace() {
+        return zeroOrMore(anyCharacterInCategory("Space"));
+    }
+    
+    public static PatternComponent caseInsensitive(Object o) {
+        return new Flags("i", toPattern(o));
+    }
+    
+    public static PatternComponent caseSensitive(Object o) {
+        return new Flags("-i", toPattern(o));
+    }
+
     public static PatternComponent toPattern(Object object) {
         if (object instanceof PatternComponent) {
             return (PatternComponent) object;
         } else {
             return text(object.toString());
         }
-    }
-
-    public static PatternComponent whitespace() {
-        return zeroOrMore(anyCharacterInCategory("Space"));
     }
 }
