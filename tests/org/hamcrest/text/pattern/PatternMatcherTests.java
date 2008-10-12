@@ -16,6 +16,7 @@ import static org.hamcrest.text.pattern.Patterns.from;
 import static org.hamcrest.text.pattern.Patterns.listOf;
 import static org.hamcrest.text.pattern.Patterns.oneOrMore;
 import static org.hamcrest.text.pattern.Patterns.optional;
+import static org.hamcrest.text.pattern.Patterns.separatedBy;
 import static org.hamcrest.text.pattern.Patterns.sequence;
 import static org.hamcrest.text.pattern.Patterns.text;
 import static org.hamcrest.text.pattern.Patterns.valueOf;
@@ -40,9 +41,11 @@ public class PatternMatcherTests {
 
     @Test
     public void matchesPlainTextContainingSpecialRegexCharacters() {
-        PatternMatcher matcher = new PatternMatcher(text("*star*"));
-
-        assertThat("*star*", matchesPattern(matcher));
+        assertThat("*star*", matchesPattern(
+                new PatternMatcher(text("*star*"))));
+        
+        assertThat("-", matchesPattern(
+                new PatternMatcher(text("-"))));
     }
 
     @Test
@@ -283,6 +286,14 @@ public class PatternMatcherTests {
         assertThat("az", matchesPattern(matcher));
         assertThat("a z", matchesPattern(matcher));
         assertThat("a \t z", matchesPattern(matcher));
+    }
+    
+    @Test
+    public void matchesSequenceSeparatedByPattern() {
+        PatternMatcher matcher = new PatternMatcher(
+                separatedBy(",", "a", "b", "c"));
+        
+        assertThat("a,b,c", matchesPattern(matcher));
     }
     
     @Test

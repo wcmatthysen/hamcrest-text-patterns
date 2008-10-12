@@ -1,5 +1,8 @@
 package org.hamcrest.text.pattern;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hamcrest.text.pattern.internal.ast.AnyCharacter;
 import org.hamcrest.text.pattern.internal.ast.CaptureGroup;
 import org.hamcrest.text.pattern.internal.ast.CharacterInRange;
@@ -82,15 +85,20 @@ public abstract class Patterns {
         return new ListOf(toPattern(element), toPattern(","));
     }
 
-    public static PatternComponent[] toPatterns(Object... alternatives) {
-        PatternComponent[] patterns = new PatternComponent[alternatives.length];
-        for (int i = 0; i < patterns.length; i++)
-            patterns[i] = toPattern(alternatives[i]);
-        return patterns;
-    }
-
     public static PatternComponent whitespace() {
         return zeroOrMore(anyCharacterInCategory("Space"));
+    }
+    
+    public static PatternComponent separatedBy(Object separator, Object... elements) {
+        List<Object> separated = new ArrayList<Object>(elements.length*2 - 1);
+        
+        separated.add(elements[0]);
+        for (int i = 1; i < elements.length; i++) {
+            separated.add(separator);
+            separated.add(elements[i]);
+        }
+        
+        return sequence(separated.toArray());
     }
     
     public static PatternComponent caseInsensitive(Object o) {
@@ -100,7 +108,15 @@ public abstract class Patterns {
     public static PatternComponent caseSensitive(Object o) {
         return new Flags("-i", toPattern(o));
     }
-
+    
+    public static PatternComponent[] toPatterns(Object... args) {
+        PatternComponent[] patterns = new PatternComponent[args.length];
+        for (int i = 0; i < patterns.length; i++) {
+            patterns[i] = toPattern(args[i]);
+        }
+        return patterns;
+    }
+    
     public static PatternComponent toPattern(Object object) {
         if (object instanceof PatternComponent) {
             return (PatternComponent) object;
