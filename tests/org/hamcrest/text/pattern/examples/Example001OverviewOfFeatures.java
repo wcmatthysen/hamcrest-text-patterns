@@ -40,6 +40,9 @@ public class Example001OverviewOfFeatures {
         
         Parse parse = dateRange.parse(input);
         
+        assertThat(parse.get("from"), equalTo("31 Dec 2003"));
+        assertThat(parse.get("to"), equalTo("16 aug 2008"));
+        
         assertThat(parse.get("from.day"), equalTo("31"));
         assertThat(parse.get("from.month"), equalTo("Dec"));
         assertThat(parse.get("from.year"), equalTo("2003"));
