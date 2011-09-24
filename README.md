@@ -1,6 +1,6 @@
 hamcrest-text-patterns
 ======================
-A library for writing readable, composable regular expression matchers that integrates cleanly with Hamcrest.
+A library for writing readable, composable regular expression matchers that integrates cleanly with [Hamcrest](http://code.google.com/p/hamcrest/).
 
 Features
 --------
@@ -52,7 +52,7 @@ And, because we defined capture groups in our date pattern, we can extract the p
 
 Matching
 --------
-A PatternMatcher is a Hamcrest matcher, and so text patterns can be used with libraries that build upon Hamcrest, such as JUnit or jMock. For example:
+A PatternMatcher is a Hamcrest matcher, and so text patterns can be used with libraries that build upon Hamcrest, such as [JUnit](http://www.junit.org/) or [jMock](http://www.jmock.org/). For example:
 
     String input = "31 Dec 2003 - 16 aug 2008";
     assertThat(input, dateRange);
