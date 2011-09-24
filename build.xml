@@ -1,7 +1,8 @@
+
 <project name="hamcrest-text-patterns" default="all">
-	<property name="product" value="hamcrest-text-patterns"/>
-    <property name="version" value="SNAPSHOT"/>
-	<property name="package" value="${product}-${version}"/>
+    <property name="product" value="hamcrest-text-patterns"/>
+    <property name="version" value="0.0.1"/>
+    <property name="package" value="${product}-${version}"/>
     
     <target name="all" depends="clean, dist" description="Build everything"/>
 
@@ -11,7 +12,7 @@
 
     <target name="compile" description="Compile Squiggle">
         <mkdir dir="build/classes"/>
-        <javac srcdir="src" destdir="build/classes">
+        <javac srcdir="src/main/java" destdir="build/classes">
             <classpath>
                 <fileset dir="lib"/>
             </classpath>
@@ -20,49 +21,49 @@
 
     <target name="compile-tests" depends="jar" description="Compile tests">
         <mkdir dir="build/tests"/>
-        <javac srcdir="tests" destdir="build/tests">
-        	<classpath>
-        		<pathelement location="build/${package}.jar"/>
-        		<fileset dir="lib"/>
-        	</classpath>
+        <javac srcdir="src/test/java" destdir="build/tests">
+            <classpath>
+                <pathelement location="build/${package}.jar"/>
+                <fileset dir="lib"/>
+            </classpath>
         </javac> 
     </target>
 	
-	<target name="test" depends="compile-tests" description="Runs the tests">
-		<junit fork="yes" forkmode="once" printsummary="no" showoutput="yes">
-			<classpath>
-        		<pathelement location="build/${package}.jar"/>
-        		<pathelement location="build/tests"/>
-				<fileset dir="lib"/>
-			</classpath>
+    <target name="test" depends="compile-tests" description="Runs the tests">
+        <junit fork="yes" forkmode="once" printsummary="no" showoutput="yes">
+            <classpath>
+                <pathelement location="build/${package}.jar"/>
+                <pathelement location="build/tests"/>
+                <fileset dir="lib"/>
+            </classpath>
 			
-			<formatter type="brief" usefile="no"/>
+            <formatter type="brief" usefile="no"/>
 			
-			<batchtest haltonfailure="yes">
-				<fileset dir="tests">
-					<include name="**/Example*.java"/>
-				</fileset>
-			</batchtest>
-		</junit>
-	</target>
+            <batchtest haltonfailure="yes">
+                <fileset dir="src/test/java">
+                    <exclude name="**/Abstract*"/>
+                    <include name="**/*.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
 
     <target name="dist" depends="test, javadoc, src-zip" description="Build distribution bundles">
         <mkdir dir="build/${package}"/>
         <copy todir="build/${package}">
             <fileset dir=".">
                 <include name="docs/**"/>
-                <include name="tests/**"/>
                 <include name="src/**"/>
                 <include name="build.xml"/>
                 <include name="LICENSE.txt"/>
-           	</fileset>
+            </fileset>
         </copy>
         <copy todir="build/${package}">
             <fileset dir="build">
-	            <include name="${package}.jar"/>
-	            <include name="${package}-src.zip"/>
-	            <include name="docs/**"/>
-        	</fileset>
+                <include name="${package}.jar"/>
+                <include name="${package}-src.zip"/>
+                <include name="docs/**"/>
+            </fileset>
         </copy>
         <zip zipfile="build/${package}.zip" basedir="build" includes="${package}/**"/>
     </target>

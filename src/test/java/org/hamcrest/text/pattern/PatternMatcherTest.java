@@ -28,7 +28,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-public class PatternMatcherTests {
+public class PatternMatcherTest {
     @Test
     public void matchesPlainText() {
         PatternMatcher matcher = new PatternMatcher(text("text"));

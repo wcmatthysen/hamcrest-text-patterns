@@ -2,7 +2,7 @@ package org.hamcrest.text.pattern.internal.naming;
 
 import junit.framework.TestCase;
 
-public class GroupNamespaceTests extends TestCase {
+public class GroupNamespaceTest extends TestCase {
     GroupNamespace environment = new GroupNamespace();
 
     public void testBindsIndicesToNamesAllocatingIndicesFromOne() {

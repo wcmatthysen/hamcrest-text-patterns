@@ -2,7 +2,7 @@ package org.hamcrest.text.pattern.internal.naming;
 
 import junit.framework.TestCase;
 
-public class PathTests extends TestCase {
+public class PathTest extends TestCase {
     public void testCanBeComparedForEquality() {
         assertTrue(new Path("a", "b").equals(new Path("a", "b")));
         assertFalse(new Path("a", "b").equals(new Path("a")));

@@ -17,7 +17,7 @@ import org.hamcrest.text.pattern.PatternMatchException;
 import org.hamcrest.text.pattern.PatternMatcher;
 import org.junit.Test;
 
-public class Example001OverviewOfFeatures {
+public class Example001OverviewOfFeaturesTest {
     PatternComponent month = either(
         "jan", "feb", "mar", "apr", "may", "jun", 
         "jul", "aug", "sep", "oct", "nov", "dec");
