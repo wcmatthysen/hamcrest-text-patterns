@@ -4,7 +4,7 @@ A library for writing readable, composable regular expression matchers that inte
 
 Features
 --------
-* Easier to read (although more long-winded) than regular expressions
+* Easier to read (although more long-winded) than regular expressions.
 * Named capture groups: captured text is identified by name, not by the index of the group.
 * Composable: patterns can be easily combined into more complex patterns without worrying about breaking regex syntax or changing group identifiers.
 * Refactoring friendly: patterns can be refactored with your favourite IDE.
@@ -84,7 +84,7 @@ public class AsciiControlCharacter implements PatternComponent {
 }
 ```
 
-Then, we must implement the {{buildRegex}} method to append the regex syntax for the pattern component to the StringBuilder.
+Then, we must implement the `buildRegex` method to append the regex syntax for the pattern component to the StringBuilder.
 
 ```java
 public class AsciiControlCharacter implements PatternComponent {
