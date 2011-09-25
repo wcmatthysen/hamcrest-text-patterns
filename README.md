@@ -106,6 +106,28 @@ public class ProjectSpecificPatterns {
 }
 ```
 
+Maven
+-----
+To use hamcrest-text-patterns with Maven 2/3, you must add the following repository to your project's `pom.xml` file:
+
+```xml
+<repository>
+  <id>hamcrest-text-patterns-repo</id>
+  <name>hamcrest-text-patterns repository on GitHub</name>
+  <url>http://wcmatthysen.github.com/hamcrest-text-patterns/repository/</url>
+</repository>
+```
+
+Then, you can add the following dependency:
+
+```xml
+<dependency>
+  <groupId>org.hamcrest</groupId>
+  <artifactId>hamcrest-text-patterns</artifactId>
+  <version>0.0.1</version>
+</dependency>
+```
+
 License
 -------
 BSD License

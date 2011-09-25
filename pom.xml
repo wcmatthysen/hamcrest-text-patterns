@@ -29,6 +29,13 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>gh-pages</id>
+            <url>file:///${basedir}/../hamcrest-text-patterns-pages/repository/</url>
+        </repository>
+    </distributionManagement>
     
     <dependencies>
         <!-- Runtime Dependencies -->
