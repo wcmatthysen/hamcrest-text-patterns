@@ -81,6 +81,10 @@
     </target>
     
     <target name="javadoc" description="Generate Javadoc documentation">
-        <javadoc sourcepath="src" destdir="build/docs/api"/>
+        <javadoc sourcepath="src/main/java" destdir="build/docs/api">
+            <classpath>
+                <fileset dir="lib"/>
+            </classpath>
+        </javadoc>
     </target>
 </project>
